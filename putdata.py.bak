@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+import sys
+import time
+import serial
+import datetime
+import socket
+
+from influxdb import InfluxDBClient
+
+client = InfluxDBClient(host='localhost', port=8086)
+#client.create_database('pyexample')
+#client.get_list_database()
+client.switch_database('pyexample')
+
+now = datetime.datetime.now()
+json_body = [
+    {
+        "measurement": "brushEvents",
+        "tags": {
+            "user": "Carols",
+            "brushId": "6c89f539-71c6-490d-a28d-6c5d84c0ee2f"
+        },
+        "time": now,
+        "fields": {
+            "duration": now.minute
+        }
+    }
+]
+client.write_points(json_body)
